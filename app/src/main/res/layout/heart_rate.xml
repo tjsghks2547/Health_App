@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_hear_rate2"
+    tools:context=".Heart_Rate">
+
+
+    <!--    <com.airbnb.lottie.LottieAnimationView-->
+    <!--        android:id="@+id/animation_view"-->
+    <!--        android:layout_width="66dp"-->
+    <!--        android:layout_height="45dp"-->
+    <!---->
+    <!--        android:layout_marginStart="222dp"-->
+    <!--        android:layout_marginTop="48dp"-->
+    <!--        android:layout_marginEnd="37dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.569"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:lottie_autoPlay="true"-->
+    <!--        app:lottie_fileName="heartbeat.json"-->
+    <!--        app:lottie_loop="true" />-->
+
+    <TextView
+        android:id="@+id/messagelogTextView"
+        android:layout_width="99dp"
+        android:layout_height="71dp"
+        android:layout_marginStart="123dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginBottom="607dp"
+        android:fontFamily="@font/roboto_medium"
+        android:gravity="center"
+        android:text="@string/init"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_more"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/view_more"
+        android:layout_width="114dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="113dp"
+        android:layout_marginEnd="259dp"
+        android:layout_marginBottom="572dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+    <Button
+        android:id="@+id/Service_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="269dp"
+        android:layout_marginBottom="470dp"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_more" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

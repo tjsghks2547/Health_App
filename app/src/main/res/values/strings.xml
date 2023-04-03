@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">New_MIT_Mobile_app</string>
+    <string name="wearable_device_is_connected">Wearable device is connected</string>
+    <string name="Health_Care">Health Care</string>
+    <string name="Bluetooth_check">Bluetooth check</string>
+    <string name="init">...</string>
+    <string name="TODO">TODO</string>
+    <string name="Login">Login</string>
+    <string name="회원가입">회원가입</string>
+    <string name="Register">Register</string>
+    <string name="Mit">Mit</string>
+
+</resources>

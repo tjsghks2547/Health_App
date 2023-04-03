@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "520232927765",
+    "firebase_url": "https://mitlogin-27e78-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "mitlogin-27e78",
+    "storage_bucket": "mitlogin-27e78.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520232927765:android:589e1378590855761cc41c",
+        "android_client_info": {
+          "package_name": "com.example.messagetransfer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520232927765-fa4h7b6ba6bhegeha2196180bapnm3vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCX6XKpwIALkMyyXAYvtbTMxxIJX_ZbeW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520232927765-fa4h7b6ba6bhegeha2196180bapnm3vj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
