@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_hear_rate2"
+    android:background="@drawable/ic_heart_background"
     tools:context=".Heart_Rate">
 
 
@@ -28,7 +28,6 @@
         android:id="@+id/messagelogTextView"
         android:layout_width="99dp"
         android:layout_height="71dp"
-        android:layout_marginStart="123dp"
         android:layout_marginTop="54dp"
         android:layout_marginEnd="37dp"
         android:layout_marginBottom="607dp"
@@ -38,39 +37,67 @@
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/view_more"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/ecg_button"
+        android:layout_width="340dp"
+        android:layout_height="135dp"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="42dp"
+        android:layout_marginEnd="37dp"
+        android:layout_marginBottom="19dp"
+        android:background="@drawable/ic_ecg_realbanner"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Service_button"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="218dp"
+        android:layout_marginTop="358dp"
+        android:layout_marginEnd="146dp"
+        android:layout_marginBottom="325dp"
+        android:src="@drawable/ic_exercise_running"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/view_more"
-        android:layout_width="114dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="38dp"
-        android:layout_marginTop="113dp"
-        android:layout_marginEnd="259dp"
-        android:layout_marginBottom="572dp"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/Service_button"
+        android:layout_width="129dp"
+        android:layout_height="44dp"
+
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="125dp"
+        android:layout_marginEnd="240dp"
+        android:background="@drawable/ic_start_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
-    <Button
-        android:id="@+id/Service_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginEnd="269dp"
-        android:layout_marginBottom="470dp"
-        android:text="Button"
+    <TextView
+        android:id="@+id/total_walk"
+        android:layout_width="81dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="237dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="325dp"
+        android:gravity="center"
+        android:text="@string/init"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_more" />
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/messagelogTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

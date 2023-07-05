@@ -1,5 +1,6 @@
 package com.example.new_mit_mobile_app
 
+import android.app.Application
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +8,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import android.widget.Toast
+import com.example.new_mit_mobile_app.Register.Birth.Companion.Birth_variable
+import com.example.new_mit_mobile_app.Register.Firstname.Companion.Firstname_variable
+import com.example.new_mit_mobile_app.Register.Gender.Companion.Gender_variable
+import com.example.new_mit_mobile_app.Register.Height.Companion.Height_variable
+import com.example.new_mit_mobile_app.Register.ID.Companion.ID_variable
+import com.example.new_mit_mobile_app.Register.Lastname.Companion.Lastname_variable
+import com.example.new_mit_mobile_app.Register.Password.Companion.Password_variable
+import com.example.new_mit_mobile_app.Register.Weight.Companion.Weight_variable
 import com.example.new_mit_mobile_app.databinding.ActivityLoginBinding
 import com.example.new_mit_mobile_app.databinding.BluetoothBinding
 import com.example.new_mit_mobile_app.databinding.RegisterBinding
@@ -16,6 +25,129 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class Register : AppCompatActivity() {
+
+
+    class Firstname : Application() {
+
+        companion object {
+            var Firstname_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Firstname_variable = "initial value"
+        }
+    }
+
+    class Lastname : Application() {
+
+        companion object {
+            var Lastname_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Lastname_variable = "initial value"
+        }
+    }
+
+    class ID : Application() {
+
+        companion object {
+            var ID_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            ID_variable = "initial value"
+        }
+    }
+
+    class Password : Application() {
+
+        companion object {
+            var Password_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Password_variable = "initial value"
+        }
+    }
+
+    class Gender : Application() {
+
+        companion object {
+            var Gender_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Gender_variable = "initial value"
+        }
+    }
+
+    class Birth : Application() {
+
+        companion object {
+            var Birth_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Birth_variable = "initial value"
+        }
+    }
+
+    class Weight : Application() {
+
+        companion object {
+            var Weight_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Weight_variable = "initial value"
+        }
+    }
+
+    class Height : Application() {
+
+        companion object {
+            var Height_variable: String = ""
+
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Height_variable = "initial value"
+        }
+    }
+
+
 
     private lateinit var auth:FirebaseAuth
 
@@ -77,7 +209,7 @@ class Register : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    val intent3 = Intent(this,Login::class.java)
+                    val intent3 = Intent(this,Health_Suvey::class.java)
                     startActivity(intent3)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -108,6 +240,22 @@ class Register : AppCompatActivity() {
         user["birth"] = birth
         user["weight"] = weight
         user["Height"] = Height
+
+
+        // 전역 변수 값 저장하는 변수들
+
+        Firstname_variable = firstname
+        Lastname_variable = lastname
+        ID_variable = inputEmail
+        Password_variable = inputPassword
+        Gender_variable = gender
+        Birth_variable = birth
+        Weight_variable = weight
+        Height_variable = Height
+
+
+
+
 
 
 

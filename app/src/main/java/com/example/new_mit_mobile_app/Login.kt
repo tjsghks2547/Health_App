@@ -1,8 +1,11 @@
 package com.example.new_mit_mobile_app
 
+import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.preference.PreferenceManager
@@ -11,6 +14,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.new_mit_mobile_app.databinding.ActivityLoginBinding
 import com.example.new_mit_mobile_app.databinding.BluetoothBinding
@@ -60,6 +65,26 @@ class Login : AppCompatActivity() {
 
         binding.imageButton.setOnClickListener{
             performLogin()
+        }
+
+        val REQUEST_ACTIVITY_RECOGNITION_PERMISSION = 1 // 권한 요청 코드
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // 안드로이드 10 이상에서는 ACTIVITY_RECOGNITION 권한이 필요합니다.
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION)
+                != PackageManager.PERMISSION_GRANTED
+            ) {
+                REQUEST_ACTIVITY_RECOGNITION_PERMISSION
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.ACTIVITY_RECOGNITION),
+                    REQUEST_ACTIVITY_RECOGNITION_PERMISSION
+                )
+            }
+        } else {
+            // 안드로이드 10 미만에서는 걸음 수 측정을 지원하지 않습니다.
+            // 적절한 대안을 제공해야 합니다.
         }
 
 
@@ -132,7 +157,7 @@ class Login : AppCompatActivity() {
 
 
 
-
+        val number : Int = 1
         Log.d("실행됨","11")
 
 

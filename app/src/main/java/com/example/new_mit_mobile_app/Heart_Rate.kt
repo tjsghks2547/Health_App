@@ -62,6 +62,7 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
 
         companion object {
             var myVariable: String = ""
+
         }
 
         override fun onCreate() {
@@ -69,6 +70,20 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
 
             // 전역 변수 초기화
             myVariable = "initial value"
+        }
+    }
+
+    class Sp02App : Application() {
+
+        companion object{
+            var Sp02 : String = ""
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Sp02 = "initial value"
         }
     }
 
@@ -98,6 +113,7 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
     private var currentAckFromWearForAppOpenCheck: String? = null
     private val APP_OPEN_WEARABLE_PAYLOAD_PATH = "/APP_OPEN_WEARABLE_PAYLOAD"
     private val MESSAGE_ITEM_RECEIVED_PATH: String = "/message-item-received"
+    private val MESSAGE_ITEM_RECEIVED_PATH2: String = "/message-item-received2"
 
     //서비스로 넘어가는 변수
 
@@ -109,6 +125,7 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
 
     private val TAG_GET_NODES: String = "getnodes1"
     private val TAG_MESSAGE_RECEIVED: String = "receive1"
+    private val TAG_MESSAGE_RECEIVED2: String = "receive2"
 
     private var messageEvent: MessageEvent? = null
     private var wearableNodeUri: String? = null
@@ -146,12 +163,6 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
         linelist = ArrayList()
         Log.d(TAG,"onCreate 작동중")
 
-        binding.viewMore.setOnClickListener{
-            val intent = Intent(this,Heart_Rate_Graph::class.java)
-            startActivity(intent)
-        }
-
-
 
 
 
@@ -162,6 +173,12 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
             Toast.makeText(this, "Service start", Toast.LENGTH_LONG).show()
 
 
+        }
+
+        binding.ecgButton.setOnClickListener{
+            val ecgIntent = Intent(this,ECG_Data::class.java)
+            startActivity(ecgIntent)
+            Toast.makeText(this,"저장소에서 ECG 데이터를 가져와주세요",Toast.LENGTH_LONG).show()
         }
 
 
@@ -395,8 +412,15 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
     @SuppressLint("SetTextI18n")
     override fun onMessageReceived(p0: MessageEvent) {
         try {
+
+            // 데이터 블루투스로 받아 오는 코드
              val s =
                 String(p0.data, StandardCharsets.UTF_8)
+
+
+
+
+
 
 
 
@@ -415,7 +439,10 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
                         + s
 
             )
-            binding.messagelogTextView.text = s
+
+
+
+            binding.totalWalk.text =Foreground.walkApp.Total_step.toString()
 
             //파이어베이스 리얼타임 데이터베이스 데이터 넣기
             val database = Firebase.database("https://mitlogin-27e78-default-rtdb.asia-southeast1.firebasedatabase.app/")
@@ -513,7 +540,28 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
 
                 messageEvent = p0
                 wearableNodeUri = p0.sourceNodeId
-            } else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
+            }else if(messageEventPath == MESSAGE_ITEM_RECEIVED_PATH2){
+                currentAckFromWearForAppOpenCheck = s
+                Log.d(
+                    TAG_MESSAGE_RECEIVED2,
+                    "Received acknowledgement message that app is open in wear"
+                )
+
+                try{
+                    val sbTemp2 = StringBuilder()
+                    sbTemp2.append("\n")
+                    sbTemp2.append(s)
+                    Log.d("receive2","$sbTemp2")
+                    Sp02App.Sp02 = "${sbTemp2.toString()}"
+
+
+
+                }catch (e:Exception){
+
+                }
+
+            }
+            else if (messageEventPath.isNotEmpty() && messageEventPath == MESSAGE_ITEM_RECEIVED_PATH) {
 
                 try {
                     binding.messagelogTextView.visibility = View.VISIBLE
@@ -523,6 +571,8 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
                     sbTemp.append("\n")
                     sbTemp.append(s)
                     Log.d("receive1", " $sbTemp")
+
+                    binding.messagelogTextView.text = s
 
 
 
@@ -547,6 +597,7 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
             e.printStackTrace()
             Log.d("receive1", "Handled")
         }
+
     }
 
     override fun onPause() {
@@ -572,10 +623,11 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
             e.printStackTrace()
         }
         Log.d(TAG,"onResume 작동중")
+
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
-        TODO("Not yet implemented")
+
     }
 
     override fun onStop() {
@@ -594,6 +646,8 @@ class Heart_Rate :  AppCompatActivity(), CoroutineScope by MainScope(),
         } catch (e: Exception) {
             e.printStackTrace()
         }
+
+
 
 
 

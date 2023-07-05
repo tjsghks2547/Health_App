@@ -1,16 +1,26 @@
 package com.example.new_mit_mobile_app
 
+import android.Manifest.permission.ACTIVITY_RECOGNITION
+import android.Manifest.permission_group.ACTIVITY_RECOGNITION
 import android.app.*
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkRequest
 import android.os.*
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
@@ -25,16 +35,68 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
+import java.sql.DriverManager
 
-class Foreground : Service() {
+class Foreground : Service(), SensorEventListener {
     val SC = "myService"
-    var heart = Heart_Rate().Service_s
 
     private lateinit var mRunnable: Runnable
 
-    private val delayMillis = 60000L // 1분
+    private val delayMillis = 6000L // 1분
     private lateinit var handlerThread: HandlerThread
     private lateinit var handler: Handler
+
+
+    //인터넷 연결 확인 변수들
+
+    private lateinit var cm2 : ConnectivityManager
+
+    var internetcheck : Int = 0
+    private val networkCallBack = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            // 네트워크가 연결될 때 호출됩니다.
+            internetcheck = 1
+        }
+
+        override fun onLost(network: Network) {
+            // 네트워크가 끊길 때 호출됩니다.
+            internetcheck = 2
+
+        }
+    }
+
+
+    //걸음수 코드
+
+    private lateinit var sensorManager: SensorManager
+    private var stepCountSensor: Sensor? = null
+    private var stepDetectorSensor: Sensor? = null
+    private var stepCount: Int = 0
+    private var counterstep: Int = 0
+    private var Allcounterstep: Int = 0
+
+    private var lastDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+
+
+    class walkApp : Application() {
+
+        companion object {
+            var Total_step: Int = 0
+        }
+
+        override fun onCreate() {
+            super.onCreate()
+
+            // 전역 변수 초기화
+            Total_step = 0
+
+
+
+        }
+    }
+
+
+
 
 
 
@@ -54,7 +116,7 @@ class Foreground : Service() {
 
     //파베 주소 및 저장 경로 설정
     private var database = Firebase.database("https://mitlogin-27e78-default-rtdb.asia-southeast1.firebasedatabase.app/")
-    private var myRef = database.getReference("Heart_Rate")
+    private var myRef = database.getReference("Health_data")
 
 
     //db에 입력 되는 데이터 1분 간격으로 조정하는 문항
@@ -67,21 +129,61 @@ class Foreground : Service() {
         }
     }
 
+    private fun checkDayChange() {
+
+        val cal = Calendar.getInstance()
+        val month = cal.get(Calendar.MONTH) + 1
+        val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
+        val currDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR)
+        if (currDay != lastDay) {
+            lastDay = currDay
+            // 변수값 초기화 또는 다른 작업 수행
+            myRef.child("Total_steps").child("${db_id.toString()}").child(dayOfMonth.toString()).setValue("${counterstep.toString()}")
+            Allcounterstep = 0
+            walkApp.Total_step = 0
+
+
+        }
+    }
+
+
+
     private fun datainput(){
 
-        val value = Heart_Rate.MyApp.myVariable
-        var long_now =System.currentTimeMillis()
-        var t_date = Date(long_now)
-        //날짜,시간을 가져오고 싶은 형태 선언
-        myRef.child("Heart_rate").child("${db_id.toString()}").child(t_date.toString().toString()).setValue("${value.toString()}")
-        Log.d("심박수값입니다","${value.toString()}")
-        Log.d("현시간","$t_date")
-
-        // 전역 변수 값 가져오기
+        if (internetcheck == 1) {
+            val value = Heart_Rate.MyApp.myVariable
+            val value2 = Heart_Rate.Sp02App.Sp02
 
 
-        // 가져온 값을 사용하여 작업 수행
+            var long_now = System.currentTimeMillis()
+            var t_date = Date(long_now)
+            //날짜,시간을 가져오고 싶은 형태 선언
+            myRef.child("heart").child("${db_id.toString()}").child(t_date.toString().toString())
+                .setValue("${value.toString()}")
+            myRef.child("walk").child("${db_id.toString()}").child(t_date.toString().toString())
+                .setValue("${counterstep.toString()}")
+            myRef.child("Sp02").child("${db_id.toString()}").child(t_date.toString().toString())
+                .setValue("${value2.toString()}")
 
+
+            Log.d("심박수값입니다", "${value.toString()}")
+            Log.d("현시간", "$t_date")
+
+            counterstep = 0
+            checkDayChange()
+
+
+            // 전역 변수 값 가져오기
+
+
+            // 가져온 값을 사용하여 작업 수행
+        }
+        else if(internetcheck == 2){
+            val nc2: Notification =
+                NotificationCompat.Builder(this, SC).setContentTitle("Mit앱과 연결이 끊겼습니다.")
+                    .setSmallIcon(R.drawable.ic_icon).build()
+            startForeground(2,nc2)
+        }
 
 
 
@@ -112,11 +214,31 @@ class Foreground : Service() {
         super.onCreate()
 
 
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        stepDetectorSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+
+
         handlerThread = HandlerThread("MyHandlerThread")
         handlerThread.start()
         handler = Handler(handlerThread.looper)
 
         handler.postDelayed(vital_data,delayMillis)
+
+
+        //인터넷 확인 코드
+
+        cm2 = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        val builder = NetworkRequest.Builder()
+        cm2.registerNetworkCallback(builder.build(),networkCallBack)
+
+
+
+
+
+
+
 
     }
 
@@ -130,6 +252,24 @@ class Foreground : Service() {
                 .setSmallIcon(R.drawable.ic_icon).build()
         startForeground(1, nc)
 
+
+
+
+
+
+        // 걸음수 코드 입니다~
+        if (stepCountSensor == null) {
+            Log.e(TAG, "Step count sensor not available")
+        } else {
+            sensorManager.registerListener(this, stepCountSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+        if (stepDetectorSensor == null) {
+            Log.e(TAG, "Step detector sensor not available")
+        } else {
+            sensorManager.registerListener(this, stepDetectorSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        }
+
+        //
 //        val database = Firebase.database("https://mitlogin-27e78-default-rtdb.asia-southeast1.firebasedatabase.app/")
 //        val myRef = database.getReference("Heart_Rate")
 //
@@ -214,7 +354,34 @@ class Foreground : Service() {
         return Binder()
     }
 
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (event != null) {
+            if (event.sensor.type == Sensor.TYPE_STEP_COUNTER) {
+                stepCount = event.values[0].toInt()
+                counterstep++
+                Allcounterstep++
 
+//                Log.d(TAG, "Step count: $stepCount")
+//                Log.d(TAG, "counter count: $counterstep")
+            } else if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
+                stepCount++
+                counterstep++
+                Allcounterstep++
+//                Log.d(TAG, "Step count: $stepCount")
+//                Log.d(TAG, "counter count: $counterstep")
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+    }
+
+    // 콜백 해제 안하면 계속해서 콜백되어 다른 액티비티에서도 인터넷 연결 체크가 됨
+    override fun onDestroy() { // 콜백 해제
+        super.onDestroy()
+        cm2 = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        cm2.unregisterNetworkCallback(networkCallBack)
+    }
 
 
 }
